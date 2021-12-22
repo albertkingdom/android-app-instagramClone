@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity=""
+    tools:context=".ProfileFragment">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/user_image_new"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        fresco:roundAsCircle="true"
+        fresco:layout_constraintStart_toStartOf="parent"
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:placeholderImage="@drawable/ic_baseline_account_circle_24"
+        />
+    <ImageView
+        android:id="@+id/user_image_new_default"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        fresco:layout_constraintStart_toStartOf="parent"
+        fresco:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_baseline_account_circle_24"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+
+        fresco:layout_constraintTop_toTopOf="parent"
+        fresco:layout_constraintEnd_toEndOf="parent"
+        fresco:layout_constraintStart_toEndOf="@id/user_image_new"
+        fresco:layout_constraintBottom_toBottomOf="@id/user_image_new"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:gravity="center_horizontal">
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="11\n貼文"
+            android:gravity="center"/>
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="11\n貼文"
+            android:gravity="center"/>
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="12\n貼文"
+            android:gravity="center"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        fresco:layout_constraintTop_toBottomOf="@id/user_image_new"
+        android:text="Mike"/>
+    <TextView
+        android:id="@+id/self_intro"
+        android:lines="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        fresco:layout_constraintTop_toBottomOf="@id/user_name"
+        android:text="self intro"/>
+    <Button
+        android:id="@+id/btn_edit_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="編輯個人檔案"
+        fresco:layout_constraintTop_toBottomOf="@id/self_intro"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/user_image"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        fresco:roundAsCircle="true"
+
+        fresco:placeholderImage="@drawable/ic_baseline_account_circle_24"
+        />
+    <ImageView
+        android:id="@+id/user_image_default"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_baseline_account_circle_24"/>
+
+    <android.widget.Button
+        android:id="@+id/btn_update_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="update profile"
+        android:enabled="true"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/postListFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.albertkingdom.loginsignuptest.HomeFragment"
+        android:label="home_fragment"
+        tools:layout="@layout/home_fragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.albertkingdom.loginsignuptest.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/login_fragment" />
+    <fragment
+        android:id="@+id/updateProfileFragment"
+        android:name="com.albertkingdom.loginsignuptest.UpdateProfileFragment"
+        android:label="update_profile_fragment"
+        tools:layout="@layout/update_profile_fragment" />
+    <fragment
+        android:id="@+id/newArticleFragment"
+        android:name="com.albertkingdom.loginsignuptest.NewArticleFragment"
+        android:label="new_article_fragment"
+        tools:layout="@layout/new_article_fragment" />
+    <fragment
+        android:id="@+id/postListFragment"
+        android:name="com.albertkingdom.loginsignuptest.PostListFragment"
+        android:label="list_fragment"
+        tools:layout="@layout/list_fragment" >
+        <action
+            android:id="@+id/action_postListFragment_to_commentListFragment"
+            app:destination="@id/commentListFragment" />
+        <action
+            android:id="@+id/action_postListFragment_to_othersProfileFragment"
+            app:destination="@id/othersProfileFragment" />
+        <action
+            android:id="@+id/action_postListFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentListFragment"
+        android:name="com.albertkingdom.loginsignuptest.CommentListFragment"
+        android:label="comment_list_fragment"
+        tools:layout="@layout/comment_list_fragment" />
+    <fragment
+        android:id="@+id/profileFragmentTest"
+        android:name="com.albertkingdom.loginsignuptest.ProfileFragmentTest"
+        android:label="profile_fragment_test"
+        tools:layout="@layout/profile_fragment_test" >
+        <action
+            android:id="@+id/action_profileFragmentTest_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/othersProfileFragment"
+        android:name="com.albertkingdom.loginsignuptest.OthersProfileFragment"
+        android:label="OthersProfileFragment" />
+</navigation>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Instagram Clone</string>
+    <string name="user_name_and_post">%s</string>
+    <string name="post_count">%1$s \n貼文</string>
+    <string name="fans_count">%1$s \n粉絲</string>
+    <string name="following_count">%1$s \n追蹤中</string>
+</resources>
