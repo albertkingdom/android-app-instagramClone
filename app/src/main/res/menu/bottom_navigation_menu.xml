@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    <item-->
-<!--        android:id="@+id/homeFragment"-->
-<!--        android:enabled="true"-->
-<!--      android:icon="@drawable/home_icon"-->
-<!--        android:title="" />-->
+
     <item
-        android:id="@+id/postListFragment"
+        android:id="@+id/postlist"
         android:enabled="true"
-        android:icon="@drawable/list_icon"
+        android:icon="@drawable/home_icon"
         android:title="" />
     <item
         android:id="@+id/newArticleFragment"
         android:enabled="true"
         android:icon="@drawable/add_icon"
         android:title="" />
-<!--    <item-->
-<!--        android:id="@+id/page_profile"-->
-<!--        android:enabled="true"-->
-<!--        android:title=""-->
-<!--        android:icon="@drawable/person_icon"/>-->
+
     <item
-        android:id="@+id/profileFragmentTest"
-        android:enabled="true"
-        android:title=""
-        android:icon="@drawable/person_icon"/>
+        android:icon="@drawable/person_icon"
+        android:id="@+id/profile"
+        android:title=""/>
 </menu>

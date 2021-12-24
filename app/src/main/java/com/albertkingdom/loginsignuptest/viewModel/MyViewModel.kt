@@ -56,13 +56,16 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    private fun uploadImage(imageUri: Uri, context: Context) =
+    private fun uploadImage(imageUri: Uri, context: Context, isCameraPhoto: Boolean) =
 
         viewModelScope.async {
             //val file = FileUtil.getFileFromUri(imageUri, context)
             //println("$TAG path= ${FileUtil.getPath(context, imageUri).toString()}")
-            val file = File(FileUtil.getPath(context, imageUri).toString())
 
+            // if isCameraPhoto, just get File instance from url. if photo is from gallery, use util method to get absolute path
+//            val file = if (isCameraPhoto) File(imageUri.toString()) else File(FileUtil.getPath(context, imageUri).toString())
+            val file = if (isCameraPhoto) File(imageUri.toString()) else File(FileUtil.fileFromContentUri(context, imageUri).toString())
+            Log.d(TAG, "path...${file.absolutePath}")
             val requestFile: RequestBody =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file!!)
 
@@ -89,12 +92,13 @@ class MyViewModel : ViewModel() {
         postTextContent: String,
         imageRelativePath: Uri,
         context: Context,
-        userEmail: String
+        userEmail: String,
+        isCameraPhoto: Boolean
     ) {
 
 
         viewModelScope.launch {
-            val uploadImageResult = uploadImage(imageRelativePath, context)
+            val uploadImageResult = uploadImage(imageRelativePath, context, isCameraPhoto)
 
             uploadImageResult.await()
 
@@ -140,7 +144,7 @@ class MyViewModel : ViewModel() {
         if (imageRelativePath != null) {
             viewModelScope.launch {
 
-                val uploadImageResult = uploadImage(imageRelativePath, context)
+                val uploadImageResult = uploadImage(imageRelativePath, context, false)
 
                 uploadImageResult.await()
                 val profileUpdates = userProfileChangeRequest {
@@ -230,7 +234,7 @@ class MyViewModel : ViewModel() {
         val postRef = db.collection("post")
 
 
-        val query = postRef.whereEqualTo("userEmail", email)
+        val query = postRef.whereEqualTo("userEmail", email).orderBy("timestamp", Query.Direction.DESCENDING)
 
         query.addSnapshotListener { value, e ->
             if (e != null) {

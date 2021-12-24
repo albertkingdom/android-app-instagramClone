@@ -1,5 +1,6 @@
 package com.albertkingdom.loginsignuptest
 
+import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -82,7 +84,8 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
                     value)
             })
         }
-
+        // change title
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.user_name_and_post, viewModel.auth.currentUser?.email)
         navigateToEditProfile()
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,7 +113,7 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
                 viewModel.checkIsLogIn()
                 if (!viewModel.checkIsLogIn()) {
                     //findNavController().popBackStack()
-                    findNavController().popBackStack(R.id.postListFragment, false)
+                    findNavController().popBackStack(R.id.postlist, false)
                    // (activity as MainActivity).bottomNavigation.selectedItemId = R.id.page_list
                 }
 
@@ -135,7 +138,7 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
     }
     fun navigateToEditProfile() {
         btnEditProfile.setOnClickListener {
-            findNavController().navigate(R.id.updateProfileFragment)
+            findNavController().navigate(R.id.action_profileFragmentTest2_to_updateProfileFragment2)
         }
 
     }

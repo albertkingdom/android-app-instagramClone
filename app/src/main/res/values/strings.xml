@@ -4,4 +4,8 @@
     <string name="post_count">%1$s \n貼文</string>
     <string name="fans_count">%1$s \n粉絲</string>
     <string name="following_count">%1$s \n追蹤中</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="login">Login</string>
+    <string name="new_post">New Post</string>
+
 </resources>

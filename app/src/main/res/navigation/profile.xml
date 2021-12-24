@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile"
+    android:label="Instagram Clone"
+    app:startDestination="@id/profileScreen">
+
+    <fragment
+        android:id="@+id/profileScreen"
+        android:name="com.albertkingdom.loginsignuptest.ProfileFragmentTest"
+        android:label="@string/user_name_and_post"
+        tools:layout="@layout/profile_fragment_test">
+        <action
+            android:id="@+id/action_profileFragmentTest2_to_updateProfileFragment2"
+            app:destination="@id/updateProfileFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateProfileFragment2"
+        android:name="com.albertkingdom.loginsignuptest.UpdateProfileFragment"
+        android:label="@string/update_profile"
+        tools:layout="@layout/update_profile_fragment" />
+</navigation>

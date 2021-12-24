@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -63,6 +64,9 @@ class OthersProfileFragment: Fragment(R.layout.profile_fragment_test) {
         setupViewPager()
         setupBtnFollow()
         queryProfilePageInfo()
+
+        // change title
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.user_name_and_post, viewModel.userEmailToBeShowInProfile)
     }
     private fun setupBtnFollow() {
 
@@ -98,7 +102,7 @@ class OthersProfileFragment: Fragment(R.layout.profile_fragment_test) {
     }
     fun navigateToEditProfile() {
         btnEditProfile.setOnClickListener {
-            findNavController().navigate(R.id.updateProfileFragment)
+            findNavController().navigate(R.id.action_profileFragmentTest2_to_updateProfileFragment2)
         }
 
     }

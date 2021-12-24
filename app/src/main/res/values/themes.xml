@@ -3,23 +3,47 @@
     <style name="Theme.LoginSignUpTest" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-<!--        <item name="colorPrimary">@color/white</item>-->
+        <!--        <item name="colorPrimary">@color/white</item>-->
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <!--        <item name="colorOnPrimary">@color/white</item>-->
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
+        <!--        <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>-->
+        <item name="actionBarStyle">@style/myActionBar</item>
+
+        <!--  the title color of action bar -->
+        <item name="android:textColorPrimary">@color/black</item>
+
+
     </style>
+
     <style name="roundedCorners" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
-    <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface" >
-        <item name="android:textColorPrimary">@color/white</item>
+    <!--    <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.ActionBar.Surface" >-->
+    <!--        <item name="android:textColorPrimary">@color/white</item>-->
+    <!--        <item name="colorControlNormal">@color/white</item>-->
+    <!--    </style>-->
+    <style name="myActionBar" parent="Widget.MaterialComponents.ActionBar.Primary">
+        <item name="titleTextStyle">@style/myActionBarTextTitle</item>
+        <item name="elevation">0dp</item>
+        <item name="background">@color/white</item>
+
+    </style>
+
+
+    <style name="myActionBarTextTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="fontFamily">cursive</item>
+        <item name="android:textSize">24dp</item>
+
+
     </style>
 </resources>

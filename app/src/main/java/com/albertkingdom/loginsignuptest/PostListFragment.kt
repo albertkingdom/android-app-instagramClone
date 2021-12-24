@@ -42,13 +42,13 @@ class PostListFragment:Fragment(R.layout.list_fragment) {
                 //println("click position...$position")
                 viewModel.clickedPostPosition = position
 
-                findNavController().navigate(R.id.commentListFragment)
+                findNavController().navigate(R.id.action_postListFragment2_to_commentListFragment2)
             }
 
             override fun onItemClick(email: String) {
                 //println("click email $email")
                 viewModel.userEmailToBeShowInProfile = email
-                findNavController().navigate(R.id.othersProfileFragment)
+                findNavController().navigate(R.id.action_postListScreen_to_othersProfileFragment)
             }
 
             override fun onClickLike(position: Int) {

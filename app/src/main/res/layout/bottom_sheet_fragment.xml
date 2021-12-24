@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/standard_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:backgroundTint="#fff"
+        android:text="Camera"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:icon="@drawable/camera_icon"
+        app:iconPadding="16dp"
+        app:iconTint="@color/black" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/gallery"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:backgroundTint="#fff"
+        android:text="Gallery"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:icon="@drawable/photo_icon"
+        app:iconPadding="16dp"
+        app:iconTint="@color/black" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

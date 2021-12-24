@@ -114,8 +114,8 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     }
 
     private fun navigate() {
-//        findNavController().popBackStack(R.id.profileFragmentTest, false)
-        findNavController().popBackStack(R.id.postListFragment, false)
+//        findNavController().popBackStack(R.id.postListScreen, false)
+        findNavController().navigate(R.id.postlist)
         viewModel.checkIsLogIn()
     }
 }

@@ -1,6 +1,7 @@
 package com.albertkingdom.loginsignuptest.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +20,13 @@ class ProfileSubFragment1(private val email: String) : Fragment(R.layout.profile
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PostAdapterProfilePage
     private val viewModel: MyViewModel by activityViewModels()
-
+    val TAG = "ProfileSubFragment1"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        Log.d(TAG, "onCreateView")
         viewModel.getSingleUserPost(email)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -34,7 +35,7 @@ class ProfileSubFragment1(private val email: String) : Fragment(R.layout.profile
         super.onViewCreated(view, savedInstanceState)
         val numberOfColumn = GridColumnLayout.calculateNoOfColumns(requireContext(), 100f)
         recyclerView = view.findViewById(R.id.recyclerview_profilePage_post_list)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), numberOfColumn)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = PostAdapterProfilePage()
         adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(position: Int) {

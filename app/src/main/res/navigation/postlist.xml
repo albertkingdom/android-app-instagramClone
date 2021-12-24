@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/postlist"
+    app:startDestination="@id/postListScreen">
+
+    <fragment
+        android:id="@+id/postListScreen"
+        android:name="com.albertkingdom.loginsignuptest.PostListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/list_fragment">
+        <action
+            android:id="@+id/action_postListFragment2_to_commentListFragment2"
+            app:destination="@id/commentListFragment2" />
+        <action
+            android:id="@+id/action_postListScreen_to_othersProfileFragment"
+            app:destination="@id/othersProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentListFragment2"
+        android:name="com.albertkingdom.loginsignuptest.CommentListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/comment_list_fragment" />
+    <fragment
+        android:id="@+id/othersProfileFragment"
+        android:name="com.albertkingdom.loginsignuptest.OthersProfileFragment"
+        android:label="@string/user_name_and_post" />
+</navigation>

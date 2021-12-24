@@ -19,13 +19,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.*
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -39,6 +37,8 @@ val TAG = "MainActivity"
     lateinit var bottomNavigation: BottomNavigationView
     private val viewModel: MyViewModel by viewModels()
     val PERMISSION_REQUEST_CODE = 1
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,7 +62,7 @@ val TAG = "MainActivity"
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         // show or hide bottom navigation based on isLogin
         viewModel.isLogin.observe(this, { result->
@@ -75,6 +75,11 @@ val TAG = "MainActivity"
         findViewById<BottomNavigationView>(R.id.bottom_navigation)
             .setupWithNavController(navController)
 
+        // Setup the ActionBar with navController and 3 top level destinations
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.postListScreen, R.id.newArticleFragment,  R.id.profileScreen)
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
 
@@ -144,14 +149,19 @@ val TAG = "MainActivity"
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        return super.onCreateOptionsMenu(menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        val navController = findNavController(R.id.nav_host_fragment)
+//
+//        // navigation_menu id has to be the same as fragment id in nav graph
+//        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
 
-        // navigation_menu id has to be the same as fragment id in nav graph
-        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration)
     }
 }
