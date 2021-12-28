@@ -28,7 +28,6 @@ import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.albertkingdom.loginsignuptest.api.ImgurApi
-import com.albertkingdom.loginsignuptest.util.FileUtil.Companion.getFileFromUri
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +44,7 @@ class UpdateProfileFragment : Fragment(R.layout.update_profile_fragment) {
 
 //    private lateinit var auth: FirebaseAuth
     val TAG = "UpdateProfileFragment"
-private val viewModel: MyViewModel by activityViewModels()
+    private val viewModel: MyViewModel by activityViewModels()
     private lateinit var imageView: ImageView
     private var imageRelativePath: Uri? = null
     private lateinit var imageImgurUrl: String
