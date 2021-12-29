@@ -15,7 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.albertkingdom.loginsignuptest.api.Constants.Companion.TOPIC_NEW_POST
 import com.albertkingdom.loginsignuptest.model.InternalStoragePhoto
+import com.albertkingdom.loginsignuptest.model.NotificationData
+import com.albertkingdom.loginsignuptest.model.PushNotification
+import com.albertkingdom.loginsignuptest.service.FirebaseService
 import com.albertkingdom.loginsignuptest.util.AlertDialogUtil
 import com.albertkingdom.loginsignuptest.util.AlertReason
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
@@ -30,17 +34,19 @@ class NewArticleFragment: Fragment(R.layout.new_article_fragment) {
     private lateinit var imageView: ImageView
     private lateinit var textView: TextInputLayout
 
-    private  val viewModel: MyViewModel by activityViewModels()
+    private val viewModel: MyViewModel by activityViewModels()
     private var imageRelativePath: Uri? = null
     private var cameraPhotoPath: String? = null
+    private var userEmail: String? = null
     val TAG = "NewArticleFragment"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-//        auth = (activity as MainActivity).auth
+        userEmail = viewModel.auth.currentUser?.email
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -48,12 +54,10 @@ class NewArticleFragment: Fragment(R.layout.new_article_fragment) {
         super.onViewCreated(view, savedInstanceState)
         imageView = view.findViewById(R.id.image)
         textView = view.findViewById(R.id.text_input)
-//        takePhotoButton = view.findViewById(R.id.camera)
+
         setPickImageListener()
 
-//       takePhotoButton.setOnClickListener {
-//            takePhoto.launch()
-//        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -62,21 +66,25 @@ class NewArticleFragment: Fragment(R.layout.new_article_fragment) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         when(item.itemId) {
             R.id.share_button -> {
                 Log.d(TAG,"share button click")
-                val postContent = textView.editText.toString()
-                val userEmail = viewModel.auth.currentUser?.email.toString()
-                if (cameraPhotoPath != null) {
+                val postContent = textView.editText?.text.toString()
+
+                // share post with camera image
+                if (cameraPhotoPath != null && viewModel.checkIsLogIn()) {
                     Log.d(TAG,"upload photo from camera")
                     viewModel.uploadToFirebase(
                         postContent,
                         cameraPhotoPath!!.toUri(),
                         requireContext(),
-                        userEmail,
+                        userEmail!!,
                         true
                     )
                     navigateToList()
+
+                    constructNotificationToFirebase()
                     return true
                 }
 
@@ -86,9 +94,10 @@ class NewArticleFragment: Fragment(R.layout.new_article_fragment) {
                         postContent,
                         imageRelativePath!!,
                         requireContext(),
-                        userEmail,
+                        userEmail!!,
                         false
                     )
+                    constructNotificationToFirebase()
                     navigateToList()
                 } else if (imageRelativePath == null && viewModel.checkIsLogIn()){
                     AlertDialogUtil.showAlertDialog(AlertReason.EMPTY_IMAGE, requireContext())
@@ -195,6 +204,16 @@ class NewArticleFragment: Fragment(R.layout.new_article_fragment) {
         } catch (e: Exception) {
             e.printStackTrace()
             false
+        }
+    }
+
+    private fun constructNotificationToFirebase() {
+        PushNotification(
+            NotificationData("New Post", "$userEmail just share new post!", FirebaseService.token, userEmail),
+            TOPIC_NEW_POST
+
+        ).also {
+            viewModel.sendNotificationToFirebase(it)
         }
     }
 }

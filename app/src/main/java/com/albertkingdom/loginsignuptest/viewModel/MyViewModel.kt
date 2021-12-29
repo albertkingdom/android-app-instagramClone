@@ -7,10 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.albertkingdom.loginsignuptest.api.ImgurApi
-import com.albertkingdom.loginsignuptest.model.Comment
-import com.albertkingdom.loginsignuptest.model.Follow
-import com.albertkingdom.loginsignuptest.model.Post
-import com.albertkingdom.loginsignuptest.model.User
+import com.albertkingdom.loginsignuptest.api.PushNotificationApi
+import com.albertkingdom.loginsignuptest.model.*
 import com.albertkingdom.loginsignuptest.util.FileUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -23,13 +21,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import kotlin.math.log
+import java.lang.Exception
+
 
 class MyViewModel : ViewModel() {
     var imageImgurUrl: String? = null
@@ -48,9 +46,11 @@ class MyViewModel : ViewModel() {
     var fansCount: MutableLiveData<Int> = MutableLiveData(0)
     val auth: FirebaseAuth = Firebase.auth
 
+
     init {
         if (checkIsLogIn()) {
             val loginUserEmail = auth.currentUser?.email.toString()
+            isLogin.value = true
             getFollowingUser(loginUserEmail)
             getFans()
         }
@@ -218,8 +218,11 @@ class MyViewModel : ViewModel() {
     fun checkIsLogIn(): Boolean {
         if (auth.currentUser != null) {
             isLogin.value = true
+
+
             return true
         }
+
         isLogin.value = false
         return false
     }
@@ -348,6 +351,24 @@ class MyViewModel : ViewModel() {
 
         }
 
+
+    }
+
+    // send a firebase notification
+    fun sendNotificationToFirebase(notification: PushNotification) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            try {
+                val response = PushNotificationApi.retrofitService.postNotification(notification)
+                if (response.isSuccessful) {
+//                    Log.d(TAG, "Response: ${Gson().toJson(response)}" )
+                    Log.d(TAG, "Response: is successful...${response.body()?.string()}")
+                } else {
+                    Log.e(TAG, response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
+            }
+        }
 
     }
 }

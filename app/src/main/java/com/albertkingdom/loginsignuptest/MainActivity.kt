@@ -1,44 +1,37 @@
 package com.albertkingdom.loginsignuptest
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
+import com.albertkingdom.loginsignuptest.api.Constants.Companion.TOPIC_NEW_POST
+import com.albertkingdom.loginsignuptest.service.FirebaseService
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.messaging.FirebaseMessaging
+
 
 
 class MainActivity : AppCompatActivity() {
-val TAG = "MainActivity"
+    val TAG = "MainActivity"
     lateinit var bottomNavigation: BottomNavigationView
-    private val viewModel: MyViewModel by viewModels()
+    val viewModel: MyViewModel by viewModels()
     val PERMISSION_REQUEST_CODE = 1
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -71,6 +64,15 @@ val TAG = "MainActivity"
                 true -> View.VISIBLE
                 false -> View.GONE
             }
+
+            val sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE)
+            when (result) {
+                true -> sharedPref.edit().putString("loginUserEmail", viewModel.auth.currentUser?.email).apply()
+                false -> sharedPref.edit().remove("loginUserEmail").apply()
+            }
+
+
+
         })
         findViewById<BottomNavigationView>(R.id.bottom_navigation)
             .setupWithNavController(navController)
@@ -80,6 +82,31 @@ val TAG = "MainActivity"
             setOf(R.id.postListScreen, R.id.newArticleFragment,  R.id.profileScreen)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // Firebase Notification - subscribe
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEW_POST)
+            .addOnCompleteListener { task ->
+
+            if (!task.isSuccessful) {
+
+                Log.d(TAG, "successful subscribe")
+            }
+            Log.d(TAG, "successful subscribe")
+
+        }
+
+        // Firebase Notification 0
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener{ task ->
+            val token = task.result
+
+            Log.d(TAG, "token...$token")
+
+            FirebaseService.sharedPref = getSharedPreferences("FirebaseNotificationToken", Context.MODE_PRIVATE)
+            FirebaseService.token = token
+        }
+
+
     }
 
 

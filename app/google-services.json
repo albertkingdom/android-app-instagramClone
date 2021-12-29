@@ -120,6 +120,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421157978962:android:861cfcbf69f1a41c42708b",
+        "android_client_info": {
+          "package_name": "com.example.firebasepushnotificationtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421157978962-aepgplrk2bl1251rih598v0k1fvhq81p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6Zp9Tzb-hLNOKJRR3BiT6apMCK4w7Mcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421157978962-aepgplrk2bl1251rih598v0k1fvhq81p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "421157978962-2bh05jdmnkth627r46e33c5h0a88686g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.albertkingdom.googleSingin"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

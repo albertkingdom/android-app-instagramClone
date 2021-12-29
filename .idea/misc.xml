@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Albert/Documents/AndroidProject/android-app-instagramClone/app/src/main/res/layout/comment_list_fragment.xml" value="0.39114583333333336" />
+        <entry key="..\:/Users/Albert/Documents/AndroidProject/android-app-instagramClone/app/src/main/res/layout/item_message.xml" value="0.39114583333333336" />
+        <entry key="..\:/Users/Albert/Documents/AndroidProject/android-app-instagramClone/app/src/main/res/layout/item_post.xml" value="0.39114583333333336" />
+        <entry key="..\:/Users/Albert/Documents/AndroidProject/android-app-instagramClone/app/src/main/res/layout/list_fragment.xml" value="0.39114583333333336" />
+        <entry key="..\:/Users/Albert/Documents/AndroidProject/android-app-instagramClone/app/src/main/res/layout/login_fragment.xml" value="0.28442028985507245" />
         <entry key="app/src/main/res/drawable/favorite_border_icon.xml" value="0.3223744292237443" />
         <entry key="app/src/main/res/drawable/favorite_fill_icon.xml" value="0.3223744292237443" />
         <entry key="app/src/main/res/drawable/favorite_icon.xml" value="0.3223744292237443" />
@@ -34,7 +39,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
