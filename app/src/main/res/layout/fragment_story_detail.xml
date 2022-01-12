@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:scaleType="center"
+        android:scaleType="fitCenter"
         fresco:layout_constraintBottom_toBottomOf="parent"
         fresco:layout_constraintEnd_toEndOf="parent"
         fresco:layout_constraintStart_toStartOf="parent"

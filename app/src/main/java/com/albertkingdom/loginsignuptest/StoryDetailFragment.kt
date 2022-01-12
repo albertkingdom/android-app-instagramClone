@@ -3,13 +3,18 @@ package com.albertkingdom.loginsignuptest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -30,12 +35,9 @@ class StoryDetailFragment : DialogFragment() {
     var currentImageIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        val window = dialog.window
-        window?.requestFeature(Window.FEATURE_NO_TITLE)
-        window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
-        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen)
+
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
         Log.d(DEBUG_TAG, "onCreate")
 
         var customGestureListener = MyGestureListener()
@@ -63,8 +65,17 @@ class StoryDetailFragment : DialogFragment() {
         mDetector = GestureDetectorCompat(context, customGestureListener)
 
 
+
     }
 
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        // config animation for enter and exit
+        dialog.getWindow()?.getAttributes()?.windowAnimations = R.style.DialogAnimation
+
+        return dialog
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -119,14 +130,22 @@ class StoryDetailFragment : DialogFragment() {
         if (currentImageIndex>=postList.lastIndex){
             return
         }
-        // first quarter turn
-        val animatorFirst = ObjectAnimator.ofFloat(imageView, View.ROTATION_Y, 0f, 90f)
-        val animatorSecond = ObjectAnimator.ofFloat(imageView, View.ROTATION_Y, -90f, 0f)
+        val rotationY1 = PropertyValuesHolder.ofFloat(View.ROTATION_Y, 0f, 90f)
+        val alphaChange1 = PropertyValuesHolder.ofFloat(View.ALPHA, 1f, 0f)
+        val rotationY2 = PropertyValuesHolder.ofFloat(View.ROTATION_Y, 270f, 360f)
+        val alphaChange2 = PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
+
+        // val animatorFirst = ObjectAnimator.ofFloat(imageView, View.ROTATION_Y, 0f, 90f)
+        // animate 2 properties
+        val animatorFirst = ObjectAnimator.ofPropertyValuesHolder(imageView, rotationY1, alphaChange1)
+        // val animatorSecond = ObjectAnimator.ofFloat(imageView, View.ROTATION_Y, 270f, 360f)
+        val animatorSecond = ObjectAnimator.ofPropertyValuesHolder(imageView, rotationY2, alphaChange2)
+
 
         animatorFirst.duration = 1000
         animatorSecond.duration = 1000
-        animatorFirst.interpolator = LinearInterpolator()
-        animatorSecond.interpolator = LinearInterpolator()
+        animatorFirst.interpolator = AccelerateDecelerateInterpolator()
+        animatorSecond.interpolator = AccelerateDecelerateInterpolator()
 
         animatorFirst.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator?) {
@@ -136,7 +155,9 @@ class StoryDetailFragment : DialogFragment() {
                 //rotateButton.isEnabled = true
                 currentImageIndex += 1
                 Log.d(DEBUG_TAG, "onAnimationEnd current index = $currentImageIndex")
+
                 imageView.setImageURI(Uri.parse(postList[currentImageIndex].imageLink.toString()), null)
+                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
                 animatorSecond.start()
 
             }
