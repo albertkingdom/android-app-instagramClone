@@ -77,7 +77,7 @@ val TAG = "MainActivity"
 
         // Setup the ActionBar with navController and 3 top level destinations
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.postListScreen, R.id.newArticleFragment,  R.id.profileScreen)
+            setOf(R.id.postListScreen, R.id.newArticleScreen,  R.id.profileScreen)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
     }

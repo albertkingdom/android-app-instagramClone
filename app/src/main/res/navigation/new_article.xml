@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newArticle"
+    app:startDestination="@id/newArticleScreen">
+
+    <fragment
+        android:id="@+id/newArticleScreen"
+        android:name="com.albertkingdom.loginsignuptest.NewArticleStep1Fragment"
+        android:label="New Article"
+        tools:layout="@layout/new_article_step_1_fragment">
+        <action
+            android:id="@+id/action_newArticleFragment2_to_newArticleStep2Fragment"
+            app:destination="@id/newArticleStep2Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newArticleStep2Fragment"
+        android:name="com.albertkingdom.loginsignuptest.NewArticleStep2Fragment"
+        android:label="New Article"
+        tools:layout="@layout/new_article_step_2_fragment">
+        <argument android:name="uri" />
+        <argument android:name="cameraPhoto" />
+    </fragment>
+</navigation>

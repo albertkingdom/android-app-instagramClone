@@ -60,13 +60,9 @@
 <!--        android:label="OthersProfileFragment" />-->
     <include app:graph="@navigation/postlist" />
     <fragment
-        android:id="@+id/newArticleFragment"
-        android:name="com.albertkingdom.loginsignuptest.NewArticleFragment"
-        android:label="@string/new_post"
-        tools:layout="@layout/new_article_fragment" />
-    <fragment
         android:id="@+id/loginFragment"
         android:name="com.albertkingdom.loginsignuptest.LoginFragment"
         android:label="@string/login"
         tools:layout="@layout/login_fragment" />
+    <include app:graph="@navigation/new_article" />
 </navigation>

@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/home_icon.xml" value="0.38125" />
         <entry key="app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.16018518518518518" />
         <entry key="app/src/main/res/drawable/question_answer_icon.xml" value="0.1675925925925926" />
+        <entry key="app/src/main/res/drawable/round_shape.xml" value="0.246875" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_sheet_fragment.xml" value="0.2391304347826087" />
@@ -20,6 +21,7 @@
         <entry key="app/src/main/res/layout/fragment_story_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.3442622950819672" />
         <entry key="app/src/main/res/layout/item_message.xml" value="0.16160081053698075" />
+        <entry key="app/src/main/res/layout/item_photo_new_article.xml" value="0.24739583333333334" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_post_profile_page.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_story.xml" value="0.2368659420289855" />
@@ -27,6 +29,8 @@
         <entry key="app/src/main/res/layout/login_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/modal_bottom_sheet.xml" value="0.25" />
         <entry key="app/src/main/res/layout/new_article_fragment.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/new_article_fragment_2.xml" value="0.2526041666666667" />
+        <entry key="app/src/main/res/layout/new_article_fragment_2_step_2.xml" value="0.23072916666666668" />
         <entry key="app/src/main/res/layout/profile_fragment.xml" value="0.25" />
         <entry key="app/src/main/res/layout/profile_fragment_test.xml" value="0.335" />
         <entry key="app/src/main/res/layout/profile_sub_fragment_1.xml" value="0.25" />
@@ -36,6 +40,7 @@
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.30923076923076925" />
         <entry key="app/src/main/res/menu/comment_list_fragment_menu.xml" value="0.2898148148148148" />
         <entry key="app/src/main/res/menu/new_article_fragment_menu.xml" value="0.18385416666666668" />
+        <entry key="app/src/main/res/menu/new_article_fragment_menu_2.xml" value="0.23072916666666668" />
         <entry key="app/src/main/res/menu/profile_menu.xml" value="0.15324074074074073" />
       </map>
     </option>
