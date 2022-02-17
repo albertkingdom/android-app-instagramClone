@@ -58,26 +58,44 @@ class NewArticleStep2Fragment: Fragment(R.layout.new_article_step_2_fragment) {
 
         if (cameraPhotoPath != null) {
             Log.d(TAG,"upload photo from camera")
-            viewModel.uploadToFirebase(
-                postContent,
-                cameraPhotoPath!!.toUri(),
-                requireContext(),
-                userEmail,
-                true
-            )
+//            viewModel.uploadToFirebase(
+//                postContent,
+//                cameraPhotoPath!!.toUri(),
+//                requireContext(),
+//                userEmail,
+//                true
+//            )
+            val stream = activity?.contentResolver?.openInputStream(cameraPhotoPath!!.toUri())
+            if (stream != null) {
+                viewModel.uploadToFirebaseWithStream(
+                    postContent,
+                    stream,
+                    userEmail,
+                    true
+                )
+            }
             navigateToList()
             return
         }
 
         if (imageRelativePath != null && viewModel.checkIsLogIn()) {
             Log.d(TAG, "upload photo from gallery")
-            viewModel.uploadToFirebase(
-                postContent,
-                imageRelativePath!!,
-                requireContext(),
-                userEmail,
-                false
-            )
+//            viewModel.uploadToFirebase(
+//                postContent,
+//                imageRelativePath!!,
+//                requireContext(),
+//                userEmail,
+//                false
+//            )
+            val stream = activity?.contentResolver?.openInputStream(imageRelativePath!!)
+            if (stream != null) {
+                viewModel.uploadToFirebaseWithStream(
+                    postContent,
+                    stream,
+                    userEmail,
+                    true
+                )
+            }
             navigateToList()
             return
         }

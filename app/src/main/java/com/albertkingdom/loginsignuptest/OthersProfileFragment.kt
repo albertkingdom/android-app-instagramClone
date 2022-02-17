@@ -1,18 +1,13 @@
 package com.albertkingdom.loginsignuptest
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -90,7 +85,7 @@ class OthersProfileFragment: Fragment(R.layout.profile_fragment_test) {
 
 
 
-    fun setupViewPager() {
+    private fun setupViewPager() {
         // setup page adapter and tab layout
         pageAdapter = VPAdapter(this, viewModel.userEmailToBeShowInProfile!!)
         viewPager.adapter = pageAdapter
@@ -100,13 +95,8 @@ class OthersProfileFragment: Fragment(R.layout.profile_fragment_test) {
             tab.icon = ContextCompat.getDrawable(requireContext(),title[position])
         }.attach()
     }
-    fun navigateToEditProfile() {
-        btnEditProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragmentTest2_to_updateProfileFragment2)
-        }
 
-    }
-    fun queryProfilePageInfo() {
+    private fun queryProfilePageInfo() {
         val email = viewModel.userEmailToBeShowInProfile
         viewModel.getFans(email)
         viewModel.getFollowingUser(email!!)
@@ -125,7 +115,7 @@ class OthersProfileFragment: Fragment(R.layout.profile_fragment_test) {
         })
     }
 
-    fun cancelFollow(){
+    private fun cancelFollow(){
 
             viewModel.cancelFollowUser()
             btnFollow.text = "追蹤"

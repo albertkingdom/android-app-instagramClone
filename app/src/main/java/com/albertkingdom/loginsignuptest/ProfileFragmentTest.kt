@@ -1,6 +1,5 @@
 package com.albertkingdom.loginsignuptest
 
-import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -23,12 +22,10 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
+class ProfileFragmentTest : Fragment(R.layout.profile_fragment_test) {
     val TAG = "ProfileFragmentTest"
     private lateinit var userImage: SimpleDraweeView
     private lateinit var userImageDefault: ImageView
-    private lateinit var btnFollow: Button
-    private lateinit var btnSendMsg: Button
     private lateinit var btnEditProfile: Button
     private lateinit var textViewPostCount: TextView //文章數
     private lateinit var textViewFollowingCount: TextView //追蹤人數
@@ -39,6 +36,12 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
     private lateinit var pageAdapter: VPAdapter
     private val viewModel: MyViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (!viewModel.checkIsLogIn()) {
+            findNavController().navigate(R.id.loginFragment)
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
@@ -52,45 +55,47 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
         textViewFansCount = view.findViewById(R.id.fans_count)
 
         setHasOptionsMenu(true)
-        if(!viewModel.checkIsLogIn()) {
-            findNavController().navigate(R.id.loginFragment)
-            userImageDefault.visibility = View.VISIBLE
-            userImage.visibility = View.GONE
-        } else if (viewModel.checkIsLogIn() && viewModel.auth.currentUser?.photoUrl != null){
+
+        // setup user image
+        userImageDefault.visibility = View.VISIBLE
+        userImage.visibility = View.INVISIBLE
+        setupViewPager()
+
+        if (viewModel.auth.currentUser?.photoUrl != null) {
             userImage.visibility = View.VISIBLE
             userImageDefault.visibility = View.INVISIBLE
             userImage.setImageURI(Uri.parse(viewModel.auth.currentUser?.photoUrl.toString()), null)
-            setupViewPager()
-        } else {
-            userImage.visibility = View.INVISIBLE
-            userImageDefault.visibility = View.VISIBLE
-            setupViewPager()
         }
 
-        if (viewModel.checkIsLogIn()){
-            viewModel.singleUserPostList.observe(viewLifecycleOwner, { list->
 
-                textViewPostCount.text = String.format(resources.getString(R.string.post_count),
-                    list.size)
+        viewModel.singleUserPostList.observe(viewLifecycleOwner, { list ->
+            textViewPostCount.text = String.format(
+                resources.getString(R.string.post_count),
+                list.size
+            )
+        })
+        viewModel.followingUserList.observe(viewLifecycleOwner, { list ->
+            textViewFollowingCount.text = String.format(
+                resources.getString(R.string.following_count),
+                list.size
+            )
+        })
+        viewModel.fansCount.observe(viewLifecycleOwner, { value ->
+            textViewFansCount.text = String.format(
+                resources.getString(R.string.fans_count),
+                value
+            )
+        })
 
-            })
-            viewModel.followingUserList.observe(viewLifecycleOwner, { list ->
-                textViewFollowingCount.text = String.format(resources.getString(R.string.following_count),
-                    list.size)
-            })
-
-            viewModel.fansCount.observe(viewLifecycleOwner, { value ->
-                textViewFansCount.text = String.format(resources.getString(R.string.fans_count),
-                    value)
-            })
-        }
         // change title
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.user_name_and_post, viewModel.auth.currentUser?.email)
-        navigateToEditProfile()
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.user_name_and_post, viewModel.auth.currentUser?.email)
+        setupEditProfileButton()
     }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.profile_menu,menu)
+        inflater.inflate(R.menu.profile_menu, menu)
         if (viewModel.checkIsLogIn()) {
             menu.findItem(R.id.btn_signIn).isVisible = false
         } else {
@@ -100,21 +105,21 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.btn_signIn -> {
-                Log.d(TAG,"sign in button click")
+                Log.d(TAG, "sign in button click")
                 findNavController().navigate(R.id.loginFragment)
                 return true
             }
             R.id.btn_signOut -> {
-                Log.d(TAG,"sign out button click")
+                Log.d(TAG, "sign out button click")
                 viewModel.signOut()
                 Log.d(TAG, viewModel.checkIsLogIn().toString())
                 viewModel.checkIsLogIn()
                 if (!viewModel.checkIsLogIn()) {
                     //findNavController().popBackStack()
                     findNavController().popBackStack(R.id.postlist, false)
-                   // (activity as MainActivity).bottomNavigation.selectedItemId = R.id.page_list
+                    // (activity as MainActivity).bottomNavigation.selectedItemId = R.id.page_list
                 }
 
 
@@ -125,18 +130,19 @@ class ProfileFragmentTest: Fragment(R.layout.profile_fragment_test) {
 
         return super.onOptionsItemSelected(item)
     }
-    fun setupViewPager() {
+
+    private fun setupViewPager() {
         // setup page adapter and tab layout
 
         pageAdapter = VPAdapter(this, viewModel.auth.currentUser?.email!!)
         viewPager.adapter = pageAdapter
         val title = listOf(R.drawable.grid_icon, R.drawable.assignment_ind_icon)
-        TabLayoutMediator(tabLayout, viewPager){
-                tab, position ->
-            tab.icon = ContextCompat.getDrawable(requireContext(),title[position])
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.icon = ContextCompat.getDrawable(requireContext(), title[position])
         }.attach()
     }
-    fun navigateToEditProfile() {
+
+    private fun setupEditProfileButton() {
         btnEditProfile.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragmentTest2_to_updateProfileFragment2)
         }

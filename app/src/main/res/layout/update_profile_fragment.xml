@@ -9,13 +9,28 @@
     android:padding="20dp"
     tools:context=".UpdateProfileFragment">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/user_image"
+    <RelativeLayout
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_baseline_account_circle_24"
-        fresco:shapeAppearanceOverlay="@style/roundedCorners" />
+        android:layout_height="100dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/user_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            fresco:roundAsCircle="true" />
+
+        <ImageView
+            android:id="@+id/user_image_new_default"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_baseline_account_circle_24" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tap_image_reminder" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/displayName"

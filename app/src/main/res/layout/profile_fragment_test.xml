@@ -30,15 +30,9 @@
             android:layout_weight="1"
             android:fitsSystemWindows="false"
             android:minHeight="0dp"
-            app:layout_scrollFlags="scroll">
+            app:layout_scrollFlags="scroll"
+            android:paddingHorizontal="10dp">
 
-
-            <!--            <TextView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="50dp"-->
-            <!--                android:lines="8"-->
-            <!--                android:text="profile"-->
-            <!--                app:layout_collapseMode="parallax" />-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -203,15 +197,7 @@
 
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:lineSpacingExtra="8dp"-->
-<!--            android:lines="30"-->
-<!--            android:text="mkmvkdkmvkdmfvmdlfmvldfmvmdfvkmdkfvmldfmv\nvkofkdvkofkvokdpvkd"-->
-<!--            android:textSize="20sp"-->
 
-<!--            />-->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"

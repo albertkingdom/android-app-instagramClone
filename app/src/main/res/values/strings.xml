@@ -7,5 +7,6 @@
     <string name="update_profile">Update Profile</string>
     <string name="login">Login</string>
     <string name="new_post">New Post</string>
+    <string name="tap_image_reminder">Tap to select new image.</string>
 
 </resources>

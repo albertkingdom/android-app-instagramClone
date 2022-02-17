@@ -1,6 +1,5 @@
 package com.albertkingdom.loginsignuptest.viewModel
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -10,9 +9,8 @@ import com.albertkingdom.loginsignuptest.api.ImgurApi
 import com.albertkingdom.loginsignuptest.model.Comment
 import com.albertkingdom.loginsignuptest.model.Follow
 import com.albertkingdom.loginsignuptest.model.Post
-import com.albertkingdom.loginsignuptest.model.User
-import com.albertkingdom.loginsignuptest.util.FileUtil
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FieldValue
@@ -28,8 +26,8 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.io.File
-import kotlin.math.log
+import java.io.InputStream
+
 
 class MyViewModel : ViewModel() {
     var imageImgurUrl: String? = null
@@ -56,22 +54,18 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    private fun uploadImage(imageUri: Uri, context: Context, isCameraPhoto: Boolean) =
+
+    private fun uploadImageWithStream(stream: InputStream, isCameraPhoto: Boolean) =
 
         viewModelScope.async {
-            //val file = FileUtil.getFileFromUri(imageUri, context)
-            //println("$TAG path= ${FileUtil.getPath(context, imageUri).toString()}")
 
-            // if isCameraPhoto, just get File instance from url. if photo is from gallery, use util method to get absolute path
-//            val file = if (isCameraPhoto) File(imageUri.toString()) else File(FileUtil.getPath(context, imageUri).toString())
-            val file = if (isCameraPhoto) File(imageUri.toString()) else File(FileUtil.fileFromContentUri(context, imageUri).toString())
-            Log.d(TAG, "path...${file.absolutePath}")
+
             val requestFile: RequestBody =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file!!)
+                RequestBody.create(MediaType.parse("multipart/form-data"), stream.readBytes())
 
 
             val body: MultipartBody.Part = MultipartBody.Part.createFormData(
-                "image", file.name,
+                "image", "filename",
                 requestFile
             )
             val uploadResult = ImgurApi.retrofitService.getResult(body)
@@ -88,30 +82,19 @@ class MyViewModel : ViewModel() {
         }
 
 
-    fun uploadToFirebase(
+    fun uploadToFirebaseWithStream(
         postTextContent: String,
-        imageRelativePath: Uri,
-        context: Context,
+        stream: InputStream,
         userEmail: String,
         isCameraPhoto: Boolean
     ) {
 
 
         viewModelScope.launch {
-            val uploadImageResult = uploadImage(imageRelativePath, context, isCameraPhoto)
+            val uploadImageResult = uploadImageWithStream(stream, isCameraPhoto)
 
             uploadImageResult.await()
 
-
-            /* val post = hashMapOf(
-                 "content" to postTextContent,
-                 "userEmail" to userEmail,
-                 "imageLink" to imageImgurUrl
-             ) */
-//            val commentList = listOf<Comment>(
-//                Comment(userEmail= "test0@gmail.com", commentContent = "wow1"),
-//                Comment(userEmail= "test0@gmail.com", commentContent = "wow2")
-//            )
             val post = Post(
                 imageLink = imageImgurUrl!!,
                 userEmail = userEmail,
@@ -134,36 +117,31 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    fun updateProfile(newName: String?, imageRelativePath: Uri?, context: Context) {
+
+    fun updateProfile(newName: String?, stream: InputStream?) {
         if (!checkIsLogIn()) {
             Log.w("update profile fragment", "user is null")
             return
         }
         imageImgurUrl = null
-        // upload photo if user choose new profile photo
-        if (imageRelativePath != null) {
-            viewModelScope.launch {
 
-                val uploadImageResult = uploadImage(imageRelativePath, context, false)
+        var profileUpdates: UserProfileChangeRequest
+        viewModelScope.launch {
+            if (stream != null) {
+                // user choose new profile photo
+                val uploadImageResult = uploadImageWithStream(stream, false)
 
                 uploadImageResult.await()
-                val profileUpdates = userProfileChangeRequest {
+                profileUpdates = userProfileChangeRequest {
                     displayName = newName
                     photoUri = Uri.parse(imageImgurUrl)
                 }
-                auth.currentUser!!.updateProfile(profileUpdates)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d("update profile fragment", "User profile updated.")
-                        }
-                    }
+            } else {
+                profileUpdates = userProfileChangeRequest {
+                    displayName = newName
+                }
             }
 
-        } else {
-            val profileUpdates = userProfileChangeRequest {
-                displayName = newName
-
-            }
             auth.currentUser!!.updateProfile(profileUpdates)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -172,8 +150,9 @@ class MyViewModel : ViewModel() {
                 }
         }
 
-    }
 
+
+    }
     fun getPost() {
         // Create a reference to the cities collection
         val postRef = db.collection("post")
