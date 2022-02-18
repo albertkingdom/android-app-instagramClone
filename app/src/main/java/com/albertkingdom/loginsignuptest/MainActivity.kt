@@ -24,7 +24,9 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
+import com.albertkingdom.loginsignuptest.repository.ImgurRepository
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
+import com.albertkingdom.loginsignuptest.viewModel.MyViewModelFactory
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -33,9 +35,9 @@ import com.google.firebase.firestore.ktx.firestore
 
 
 class MainActivity : AppCompatActivity() {
-val TAG = "MainActivity"
+    val TAG = "MainActivity"
     lateinit var bottomNavigation: BottomNavigationView
-    private val viewModel: MyViewModel by viewModels()
+    private val viewModel: MyViewModel by viewModels { MyViewModelFactory(ImgurRepository()) }
     val PERMISSION_REQUEST_CODE = 1
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
@@ -58,7 +60,7 @@ val TAG = "MainActivity"
         requestPermission()
 
 
-        //setTitle("123")
+
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

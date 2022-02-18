@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
 import com.google.android.material.textfield.TextInputLayout
+import java.io.File
 
 
 class NewArticleStep2Fragment: Fragment(R.layout.new_article_step_2_fragment) {
@@ -56,49 +57,18 @@ class NewArticleStep2Fragment: Fragment(R.layout.new_article_step_2_fragment) {
         val postContent = textView.editText.toString()
         val userEmail = viewModel.auth.currentUser?.email.toString()
 
-        if (cameraPhotoPath != null) {
-            Log.d(TAG,"upload photo from camera")
-//            viewModel.uploadToFirebase(
-//                postContent,
-//                cameraPhotoPath!!.toUri(),
-//                requireContext(),
-//                userEmail,
-//                true
-//            )
-            val stream = activity?.contentResolver?.openInputStream(cameraPhotoPath!!.toUri())
-            if (stream != null) {
-                viewModel.uploadToFirebaseWithStream(
-                    postContent,
-                    stream,
-                    userEmail,
-                    true
-                )
-            }
-            navigateToList()
-            return
+        // if imageRelativePath is null -> use cameraPhotoPath instead
+        val uploadPhotoUri = imageRelativePath ?: Uri.fromFile(File(cameraPhotoPath!!))
+        val stream = activity?.contentResolver?.openInputStream(uploadPhotoUri)
+        if (stream != null) {
+            viewModel.uploadToFirebaseWithStream(
+                postContent,
+                stream,
+                userEmail
+            )
         }
+        navigateToList()
 
-        if (imageRelativePath != null && viewModel.checkIsLogIn()) {
-            Log.d(TAG, "upload photo from gallery")
-//            viewModel.uploadToFirebase(
-//                postContent,
-//                imageRelativePath!!,
-//                requireContext(),
-//                userEmail,
-//                false
-//            )
-            val stream = activity?.contentResolver?.openInputStream(imageRelativePath!!)
-            if (stream != null) {
-                viewModel.uploadToFirebaseWithStream(
-                    postContent,
-                    stream,
-                    userEmail,
-                    true
-                )
-            }
-            navigateToList()
-            return
-        }
     }
 
     private fun navigateToList() {

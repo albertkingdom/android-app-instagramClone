@@ -4,11 +4,13 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.albertkingdom.loginsignuptest.api.ImgurApi
 import com.albertkingdom.loginsignuptest.model.Comment
 import com.albertkingdom.loginsignuptest.model.Follow
 import com.albertkingdom.loginsignuptest.model.Post
+import com.albertkingdom.loginsignuptest.repository.ImgurRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -29,7 +31,7 @@ import okhttp3.RequestBody
 import java.io.InputStream
 
 
-class MyViewModel : ViewModel() {
+class MyViewModel(private val imgurRepository: ImgurRepository) : ViewModel() {
     var imageImgurUrl: String? = null
     private val db: FirebaseFirestore = Firebase.firestore
     val TAG = "viewModel"
@@ -55,7 +57,7 @@ class MyViewModel : ViewModel() {
     }
 
 
-    private fun uploadImageWithStream(stream: InputStream, isCameraPhoto: Boolean) =
+    private fun uploadImageWithStream(stream: InputStream) =
 
         viewModelScope.async {
 
@@ -68,7 +70,7 @@ class MyViewModel : ViewModel() {
                 "image", "filename",
                 requestFile
             )
-            val uploadResult = ImgurApi.retrofitService.getResult(body)
+            val uploadResult = imgurRepository.uploadToImgur(body)
 
             println("upload result:... status:${uploadResult.status}...link..${uploadResult.data.link}")
 
@@ -86,12 +88,11 @@ class MyViewModel : ViewModel() {
         postTextContent: String,
         stream: InputStream,
         userEmail: String,
-        isCameraPhoto: Boolean
     ) {
 
 
         viewModelScope.launch {
-            val uploadImageResult = uploadImageWithStream(stream, isCameraPhoto)
+            val uploadImageResult = uploadImageWithStream(stream)
 
             uploadImageResult.await()
 
@@ -129,7 +130,7 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             if (stream != null) {
                 // user choose new profile photo
-                val uploadImageResult = uploadImageWithStream(stream, false)
+                val uploadImageResult = uploadImageWithStream(stream)
 
                 uploadImageResult.await()
                 profileUpdates = userProfileChangeRequest {
@@ -328,5 +329,14 @@ class MyViewModel : ViewModel() {
         }
 
 
+    }
+}
+class MyViewModelFactory(val imgurRepository: ImgurRepository): ViewModelProvider.Factory {
+    // 通用寫法
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MyViewModel::class.java)) {
+            return MyViewModel(imgurRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

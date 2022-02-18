@@ -1,5 +1,6 @@
 package com.albertkingdom.loginsignuptest.api
 
+import com.albertkingdom.loginsignuptest.model.ImgurResponseResult
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MediaType
@@ -11,31 +12,8 @@ import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import java.io.File
 
-class Api {
-}
 
-data class SignUpResponse(
-    val profile: Profile
-)
-
-data class Profile(
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val login: String
-
-)
-
-data class ImgurResponseResult (
-    val data: ImgurData,
-    val status: Int
-)
-
-data class ImgurData (
-    val link: String
-)
 
 const val BASE_URL = "https://api.imgur.com/3/"
 
@@ -66,11 +44,4 @@ object ImgurApi {
     }
 }
 
-// Pass it like this
-//val file = File(RealPathUtils.getRealPathFromURI_API19(context, uri))
-//val file = File("123")
-//val requestFile: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-
-// MultipartBody.Part is used to send also the actual file name
-//val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
