@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.albertkingdom.loginsignuptest.api.ImgurApi
 import com.albertkingdom.loginsignuptest.model.Comment
 import com.albertkingdom.loginsignuptest.model.Follow
+import com.albertkingdom.loginsignuptest.model.LikeBy
 import com.albertkingdom.loginsignuptest.model.Post
 import com.albertkingdom.loginsignuptest.repository.ImgurRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -329,6 +330,19 @@ class MyViewModel(private val imgurRepository: ImgurRepository) : ViewModel() {
         }
 
 
+    }
+    fun addToLike(position: Int) {
+        val id = postIdList[position]
+        val postRef = id.let { db.collection("post").document(it) }
+        val newLikeBy = LikeBy(userEmail = auth.currentUser?.email!!)
+        Log.d(TAG, "id...$id")
+        postRef.update("likeByUsers", FieldValue.arrayUnion(newLikeBy))
+    }
+    fun removeLike(position: Int) {
+        val id = postIdList[position]
+        val postRef = id.let { db.collection("post").document(it) }
+        val newLikeBy = LikeBy(userEmail = auth.currentUser?.email!!)
+        postRef.update("likeByUsers", FieldValue.arrayRemove(newLikeBy))
     }
 }
 class MyViewModelFactory(val imgurRepository: ImgurRepository): ViewModelProvider.Factory {

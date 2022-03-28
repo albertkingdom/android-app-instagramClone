@@ -42,7 +42,7 @@ class PostListFragment : Fragment(R.layout.list_fragment) {
         storyRecyclerView = view.findViewById(R.id.recyclerview_story_list)
         postAdapter = PostsAdapter()
         storyAdapter = StoryAdapter()
-
+        postAdapter.setCurrentLoginUserEmail(viewModel.auth.currentUser?.email!!)
         postRecyclerView.adapter = postAdapter
         storyRecyclerView.adapter = storyAdapter
         postAdapter.setOnItemClickListener(object : OnItemClickListener {
@@ -59,9 +59,12 @@ class PostListFragment : Fragment(R.layout.list_fragment) {
                 findNavController().navigate(R.id.action_postListScreen_to_othersProfileFragment)
             }
 
-            override fun onClickLike(position: Int) {
-                println("like post position...$position")
+            override fun onAddLike(position: Int) {
+                viewModel.addToLike(position)
+            }
 
+            override fun onRemoveLike(position: Int) {
+                viewModel.removeLike(position)
             }
         })
 

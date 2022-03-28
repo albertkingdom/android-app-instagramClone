@@ -29,12 +29,38 @@
         android:layout_height="30dp" android:gravity="center_vertical"
         android:text="userxxx" />
     </androidx.appcompat.widget.LinearLayoutCompat>
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/post_image"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="200dp"
-        fresco:placeholderImage="@drawable/image_placeholder" />
+        android:layout_height="200dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/post_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            fresco:placeholderImage="@drawable/image_placeholder" />
+
+        <ImageView
+            android:id="@+id/heart_animation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/avd_instagram_like"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:alpha="0"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="30dp">

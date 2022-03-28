@@ -5,7 +5,8 @@ data class Post (
     val postContent: String? = null,
     val userEmail: String? = null,
     val commentList: List<Comment>? = null,
-    val timestamp: Any? = null
+    val timestamp: Any? = null,
+    val likeByUsers: List<LikeBy>? = null
 )
 
 data class Comment(
