@@ -90,6 +90,7 @@ class ProfileFragmentTest : Fragment(R.layout.profile_fragment_test) {
         // change title
         (requireActivity() as AppCompatActivity).supportActionBar?.title =
             getString(R.string.user_name_and_post, viewModel.auth.currentUser?.email)
+
         setupEditProfileButton()
     }
 

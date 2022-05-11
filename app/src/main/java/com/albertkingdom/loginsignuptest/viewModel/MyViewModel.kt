@@ -2,10 +2,7 @@ package com.albertkingdom.loginsignuptest.viewModel
 
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.albertkingdom.loginsignuptest.api.ImgurApi
 import com.albertkingdom.loginsignuptest.model.Comment
 import com.albertkingdom.loginsignuptest.model.Follow
@@ -42,16 +39,19 @@ class MyViewModel(private val imgurRepository: ImgurRepository) : ViewModel() {
     var postIdList: List<String> = listOf()
     var singleUserPostList: MutableLiveData<List<Post>> = MutableLiveData()
     var singleUserPostIdList: List<String> = listOf()
-    var clickedPostPosition: Int? = null
+    var clickedPostPosition: MutableLiveData<Int> = MutableLiveData(-1)
     var userEmailToBeShowInProfile: String? = null
     var followingUserList: MutableLiveData<List<String>> = MutableLiveData()
     var othersfollowingUserList: MutableLiveData<List<String>> = MutableLiveData()
     var fansCount: MutableLiveData<Int> = MutableLiveData(0)
     val auth: FirebaseAuth = Firebase.auth
-
+    val commentList: LiveData<List<Comment>> = Transformations.map(clickedPostPosition) { position ->
+        postList.value?.get(position)?.commentList
+    }
     init {
         if (checkIsLogIn()) {
             val loginUserEmail = auth.currentUser?.email.toString()
+            println("loginUserEmail $loginUserEmail")
             getFollowingUser(loginUserEmail)
             getFans()
         }
@@ -189,7 +189,8 @@ class MyViewModel(private val imgurRepository: ImgurRepository) : ViewModel() {
 
     fun addComment(commentContent: String) {
         // if clickedPostPosition != null, get -> postIdList[clickedPostPosition]
-        val id = clickedPostPosition?.let { postIdList[it] }
+//        val id = clickedPostPosition?.let { postIdList[it] }
+        val id = clickedPostPosition.value?.let { postIdList[it] }
         val postRef = id?.let { db.collection("post").document(it) }
         val newComment =
             Comment(userEmail = auth.currentUser?.email, commentContent = commentContent)
@@ -199,8 +200,11 @@ class MyViewModel(private val imgurRepository: ImgurRepository) : ViewModel() {
     fun checkIsLogIn(): Boolean {
         if (auth.currentUser != null) {
             isLogin.value = true
+            println("user is login")
             return true
         }
+        println("user is not login")
+
         isLogin.value = false
         return false
     }

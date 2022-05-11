@@ -4,18 +4,16 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.albertkingdom.loginsignuptest.R
 import com.albertkingdom.loginsignuptest.model.Post
+import com.albertkingdom.loginsignuptest.util.OnPostItemClickListener
 import com.facebook.drawee.view.SimpleDraweeView
 
 class PostAdapterProfilePage: ListAdapter<Post, PostAdapterProfilePage.PostViewHolder>(DiffCallback) {
-    private lateinit var onItemClickListener: OnItemClickListener
+    private lateinit var onItemClickListener: OnPostItemClickListener
 
     class PostViewHolder(view: View): RecyclerView.ViewHolder(view){
 
@@ -37,7 +35,7 @@ class PostAdapterProfilePage: ListAdapter<Post, PostAdapterProfilePage.PostViewH
 
 
             itemView.setOnClickListener(View.OnClickListener {
-                onItemClickListener.onItemClick(position)
+
             })
         }
     }
@@ -56,7 +54,7 @@ class PostAdapterProfilePage: ListAdapter<Post, PostAdapterProfilePage.PostViewH
         }
     }
 
-    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+    fun setOnItemClickListener(onItemClickListener: OnPostItemClickListener) {
         this.onItemClickListener = onItemClickListener
     }
 }

@@ -10,10 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.albertkingdom.loginsignuptest.R
-import com.albertkingdom.loginsignuptest.adapter.OnItemClickListener
 import com.albertkingdom.loginsignuptest.adapter.PostAdapterProfilePage
-import com.albertkingdom.loginsignuptest.adapter.PostsAdapter
 import com.albertkingdom.loginsignuptest.util.GridColumnLayout
+import com.albertkingdom.loginsignuptest.util.OnPostItemClickListener
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
 
 class ProfileSubFragment1(private val email: String) : Fragment(R.layout.profile_sub_fragment_1) {
@@ -37,18 +36,24 @@ class ProfileSubFragment1(private val email: String) : Fragment(R.layout.profile
         recyclerView = view.findViewById(R.id.recyclerview_profilePage_post_list)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = PostAdapterProfilePage()
-        adapter.setOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClick(position: Int) {
+        adapter.setOnItemClickListener(object : OnPostItemClickListener {
+            override fun onClickCommentButton(position: Int) {
                 println("click profile post $position")
             }
 
-            override fun onItemClick(email: String) {
+            override fun onClickEmail(email: String) {
 
             }
 
-            override fun onClickLike(position: Int) {
+            override fun onAddLike(position: Int) {
 
             }
+
+            override fun onRemoveLike(position: Int) {
+
+            }
+
+
 
         })
         recyclerView.adapter = adapter

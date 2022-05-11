@@ -28,6 +28,7 @@ import com.albertkingdom.loginsignuptest.repository.ImgurRepository
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModelFactory
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     val PERMISSION_REQUEST_CODE = 1
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -67,13 +69,13 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         // show or hide bottom navigation based on isLogin
-        viewModel.isLogin.observe(this, { result->
+        viewModel.isLogin.observe(this) { result ->
             Log.d(TAG, "isLogin...$result")
             bottomNavigation.visibility = when (result) {
                 true -> View.VISIBLE
                 false -> View.GONE
             }
-        })
+        }
         findViewById<BottomNavigationView>(R.id.bottom_navigation)
             .setupWithNavController(navController)
 

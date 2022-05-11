@@ -18,6 +18,7 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -30,6 +31,7 @@ import com.albertkingdom.loginsignuptest.model.Photo
 import com.albertkingdom.loginsignuptest.util.AlertDialogUtil
 import com.albertkingdom.loginsignuptest.util.AlertReason
 import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
+import com.albertkingdom.loginsignuptest.viewModel.NewArticleViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,10 +44,11 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
     private lateinit var cameraButton: ImageButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NewArticlePhotoAdapter
-    private val galleryImageList: MutableLiveData<List<Photo>> = MutableLiveData()
+    //private val galleryImageList: MutableLiveData<List<Photo>> = MutableLiveData()
+    private val newArticleViewModel: NewArticleViewModel by activityViewModels()
     private  val viewModel: MyViewModel by activityViewModels()
-    private var imageRelativePath: Uri? = null
-    private var cameraPhotoPath: String? = null
+//    private var imageRelativePath: Uri? = null
+    //private var cameraPhotoPath: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,22 +68,25 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
         adapter = NewArticlePhotoAdapter()
         adapter.onClickImageListener = object : ClickGallery {
             override fun onClickImage(position: Int) {
-                imageView.setImageURI(galleryImageList.value?.get(position)?.uri)
-                imageRelativePath = galleryImageList.value?.get(position)?.uri
+                imageView.setImageURI(newArticleViewModel.galleryImageList.value?.get(position)?.uri)
+                newArticleViewModel.setSeletedImagePosition(position)
+//                imageRelativePath = newArticleViewModel.galleryImageList.value?.get(position)?.uri
+
             }
 
         }
         recyclerView.adapter = adapter
 
 
-        galleryImageList.observe(viewLifecycleOwner, { list ->
+        newArticleViewModel.galleryImageList.observe(viewLifecycleOwner) { list ->
             Log.d(TAG, "galleryImageList size = ${list.size}")
             adapter.submitList(list)
             if (list.isNotEmpty()) {
                 imageView.setImageURI(list[0].uri)
-                imageRelativePath = list[0].uri
+//                imageRelativePath = list[0].uri
+                newArticleViewModel.setSeletedImagePosition(0)
             }
-        })
+        }
 
 
         cameraButton = view.findViewById(R.id.camera_button)
@@ -94,7 +100,9 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
             loadImagesFromExternalStorage()
         }
 
-
+        newArticleViewModel._selectedImagePosition.observe(viewLifecycleOwner) {
+            println("_selectedImagePosition $it")
+        }
 
 
     }
@@ -109,16 +117,22 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
 
             R.id.next_button -> {
 
-                if (imageRelativePath != null && viewModel.checkIsLogIn()) {
-                    Log.d(TAG, "upload photo from gallery")
-
+//                if (imageRelativePath != null && viewModel.checkIsLogIn()) {
+//                    Log.d(TAG, "upload photo from gallery")
+//
+//                    navigateToNextStep()
+//                } else if (imageRelativePath == null && viewModel.checkIsLogIn()){
+//                    AlertDialogUtil.showAlertDialog(AlertReason.EMPTY_IMAGE, requireContext())
+//                } else {
+//                    AlertDialogUtil.showAlertDialog(AlertReason.NOT_LOGIN, requireContext())
+//                }
+                val isOk = newArticleViewModel.checkIfOkToGoToStep2()
+                if (isOk) {
                     navigateToNextStep()
-                } else if (imageRelativePath == null && viewModel.checkIsLogIn()){
-                    AlertDialogUtil.showAlertDialog(AlertReason.EMPTY_IMAGE, requireContext())
                 } else {
-                    AlertDialogUtil.showAlertDialog(AlertReason.NOT_LOGIN, requireContext())
-                }
+                    AlertDialogUtil.showAlertDialog(AlertReason.EMPTY_IMAGE, requireContext())
 
+                }
                 return true
             }
         }
@@ -147,10 +161,10 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
         Log.d(TAG, isSavedSuccessfully.toString())
         if(isSavedSuccessfully) {
             loadPhotosFromInternalStorageAndNavigate()
-
+            newArticleViewModel.setIsUseCameraPhoto(true)
         }
     }
-    private fun loadImagesFromExternalStorage(): ArrayList<Photo> {
+    private suspend fun loadImagesFromExternalStorage(): ArrayList<Photo> {
         val uri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI //content://media/external/images/media
         val cursor: Cursor?
 
@@ -171,7 +185,10 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
             Log.d(TAG, "Image Full Content Path...$fullContentPath")
             listOfAllImages.add(Photo(fullContentPath))
         }
-        galleryImageList.postValue(listOfAllImages)
+//        galleryImageList.postValue(listOfAllImages)
+        withContext(Dispatchers.Main) {
+            newArticleViewModel.setGalleryImageList(listOfAllImages)
+        }
 
         cursor?.close()
         return listOfAllImages
@@ -201,13 +218,13 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
 
 
     private fun navigateToNextStep() {
-        val bundle: Bundle = if (cameraPhotoPath != null) {
-            bundleOf("cameraPhoto" to cameraPhotoPath.toString())
-        } else {
-            bundleOf("uri" to imageRelativePath.toString())
-        }
+//        val bundle: Bundle = if (cameraPhotoPath != null) {
+//            bundleOf("cameraPhoto" to cameraPhotoPath.toString())
+//        } else {
+//            bundleOf("uri" to imageRelativePath.toString())
+//        }
 
-        findNavController().navigate(R.id.action_newArticleFragment2_to_newArticleStep2Fragment, bundle)
+        findNavController().navigate(R.id.action_newArticleFragment2_to_newArticleStep2Fragment)
 
     }
 
@@ -244,8 +261,9 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
             val photos = loadPhotosFromInternalStorage()
             val latestPhoto = photos.last()
             //imageView.setImageBitmap(latestPhoto.bmp)
-            cameraPhotoPath = latestPhoto.url.toString()
-            Log.d(TAG, "cameraPhotoPath...$cameraPhotoPath")
+//            cameraPhotoPath = latestPhoto.url.toString()
+            newArticleViewModel.setCameraPhotoPath(latestPhoto.url.toString())
+            //Log.d(TAG, "cameraPhotoPath...$cameraPhotoPath")
 
             navigateToNextStep()
         }
@@ -268,7 +286,7 @@ class NewArticleStep1Fragment: Fragment(R.layout.new_article_step_1_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cameraPhotoPath = null
+//        cameraPhotoPath = null
 
     }
 

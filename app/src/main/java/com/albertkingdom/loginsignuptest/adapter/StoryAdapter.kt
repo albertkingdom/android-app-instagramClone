@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.albertkingdom.loginsignuptest.R
 import com.albertkingdom.loginsignuptest.adapter.CommentAdapter.Companion.DiffCallback
 import com.albertkingdom.loginsignuptest.model.Post
+import com.facebook.drawee.view.SimpleDraweeView
 
 class StoryAdapter: ListAdapter<Post, StoryAdapter.StoryViewHolder>(DiffCallback) {
     lateinit var onClickListener: onStoryClickListener
     class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.story_image)
+        val imageView: SimpleDraweeView = itemView.findViewById(R.id.story_image)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
@@ -28,7 +29,7 @@ class StoryAdapter: ListAdapter<Post, StoryAdapter.StoryViewHolder>(DiffCallback
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val currentPost = getItem(position)
 
-        holder.imageView.setImageURI(Uri.parse(currentPost?.imageLink.toString()))
+        holder.imageView.setImageURI(Uri.parse(currentPost?.imageLink.toString()), null)
         holder.itemView.setOnClickListener {
             onClickListener.clickImage(position)
         }
@@ -36,7 +37,7 @@ class StoryAdapter: ListAdapter<Post, StoryAdapter.StoryViewHolder>(DiffCallback
     companion object {
         val DiffCallback = object : DiffUtil.ItemCallback<Post>() {
             override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
-                return oldItem == newItem
+                return oldItem.timestamp == newItem.timestamp
             }
 
             override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {

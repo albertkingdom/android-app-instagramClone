@@ -17,8 +17,12 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.albertkingdom.loginsignuptest.model.Post
+import com.albertkingdom.loginsignuptest.viewModel.MyViewModel
+import com.albertkingdom.loginsignuptest.viewModel.StoryDetailViewModel
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -26,12 +30,12 @@ import java.lang.Exception
 
 private const val DEBUG_TAG = "StoryDetailFragment"
 class StoryDetailFragment : DialogFragment() {
+    private val viewModel: MyViewModel by activityViewModels()
+    private val storyDetailViewModel: StoryDetailViewModel by viewModels()
     private lateinit var mDetector: GestureDetectorCompat
     lateinit var imageView: SimpleDraweeView
     lateinit var closeButton: ImageButton
     lateinit var progressBar: ProgressBar
-    lateinit var changeImageTimer: Job
-    var postList = listOf<Post>()
     var currentImageIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +48,11 @@ class StoryDetailFragment : DialogFragment() {
         customGestureListener.onSwipeCallback = object : SwipeCallback {
             override fun onLeftSwipe() {
                 Log.d(DEBUG_TAG, "onLeftSwipe")
-                changeImageTimer.cancel()
-                //currentImageIndex += 1
-                cardFlip()
-                autoChangeImage()
+                storyDetailViewModel.changeImageTimer.cancel()
 
+                cardFlip()
+
+                storyDetailViewModel.setTimer()
             }
 
             override fun onRightSwipe() {
@@ -80,8 +84,12 @@ class StoryDetailFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
+        viewModel.postList.observe(viewLifecycleOwner) { list ->
+            storyDetailViewModel.setupPostList(list)
+            storyDetailViewModel.setTimer()
+        }
+        storyDetailViewModel.setCurrentImageIndex(currentImageIndex)
         return inflater.inflate(R.layout.fragment_story_detail, container, false)
     }
 
@@ -90,7 +98,7 @@ class StoryDetailFragment : DialogFragment() {
         closeButton = view.findViewById(R.id.btn_close)
         imageView = view.findViewById(R.id.story_detail_image)
         progressBar = view.findViewById(R.id.progressBar)
-        //imageView.setImageURI(Uri.parse(postList[currentImageIndex].imageLink.toString()), null)
+
 
         closeButton.setOnClickListener {
             dismiss()
@@ -101,35 +109,32 @@ class StoryDetailFragment : DialogFragment() {
             mDetector.onTouchEvent(motionEvent)
             true
         }
-       autoChangeImage()
-    }
-    fun autoChangeImage() {
-        Log.d(DEBUG_TAG, "autochangeimage, current index = $currentImageIndex")
-        imageView.setImageURI(Uri.parse(postList[currentImageIndex].imageLink.toString()), null)
-        animateProgressBar()
-        changeImageTimer = viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                while (currentImageIndex < postList.lastIndex) {
-                    //animateProgressBar()
-                    delay(5000 + 2000)
-                    cardFlip()
 
-                }
-                if (currentImageIndex == postList.lastIndex) {
-                    delay(5000)
-                    dismiss()
-                }
+        storyDetailViewModel.currentImageUrl.observe(viewLifecycleOwner) { url ->
+            Log.d(DEBUG_TAG, "currentImageUrl= $url")
+            imageView.setImageURI(Uri.parse(url.toString()), null)
+            animateProgressBar()
 
+        }
+
+        storyDetailViewModel.flipCount.observe(viewLifecycleOwner) { count ->
+
+            println("flip count $count")
+            if (count > -1) {
+                cardFlip()
             }
         }
 
-        changeImageTimer.start()
-
-    }
-    fun cardFlip(){
-        if (currentImageIndex>=postList.lastIndex){
-            return
+        storyDetailViewModel.endOfPostList.observe(viewLifecycleOwner) { boolean ->
+            if (boolean) {
+                dismiss()
+            }
         }
+    }
+
+    fun cardFlip(){
+        println("flip")
+
         val rotationY1 = PropertyValuesHolder.ofFloat(View.ROTATION_Y, 0f, 90f)
         val alphaChange1 = PropertyValuesHolder.ofFloat(View.ALPHA, 1f, 0f)
         val rotationY2 = PropertyValuesHolder.ofFloat(View.ROTATION_Y, 270f, 360f)
@@ -153,18 +158,18 @@ class StoryDetailFragment : DialogFragment() {
             }
             override fun onAnimationEnd(animation: Animator?) {
                 //rotateButton.isEnabled = true
-                currentImageIndex += 1
-                Log.d(DEBUG_TAG, "onAnimationEnd current index = $currentImageIndex")
 
-                imageView.setImageURI(Uri.parse(postList[currentImageIndex].imageLink.toString()), null)
-                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                storyDetailViewModel.incrementCurrentImageIndex()
+
+                Log.d(DEBUG_TAG, "onAnimationEnd current index = ${storyDetailViewModel.currentImageIndex.value}")
+
                 animatorSecond.start()
 
             }
         })
         animatorSecond.addListener(object : AnimatorListenerAdapter(){
             override fun onAnimationEnd(animation: Animator?) {
-               animateProgressBar()
+               //animateProgressBar()
 
             }
         })
@@ -185,7 +190,8 @@ class StoryDetailFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        changeImageTimer.cancel()
+
+        storyDetailViewModel.cancelTimer()
     }
 
 

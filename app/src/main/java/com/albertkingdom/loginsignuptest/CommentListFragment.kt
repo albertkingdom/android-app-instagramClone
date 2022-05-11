@@ -36,8 +36,8 @@ class CommentListFragment:Fragment(R.layout.comment_list_fragment) {
         recyclerView.adapter = adapter
 
 
-        if(viewModel.clickedPostPosition != null) {
-            adapter.submitList(viewModel.postList.value?.get(viewModel.clickedPostPosition!!)?.commentList)
+        viewModel.commentList.observe(viewLifecycleOwner) { listOfComment ->
+            adapter.submitList(listOfComment)
         }
 
         userImageDefault = view.findViewById(R.id.user_image_default)
@@ -79,19 +79,5 @@ class CommentListFragment:Fragment(R.layout.comment_list_fragment) {
     fun navigationBack() {
         findNavController().popBackStack()
     }
-//    fun showAlertDialog(reason: AlertReason) {
-//        val builder = AlertDialog.Builder(requireContext())
-//        when (reason) {
-//            AlertReason.EMPTY_COMMENT ->  builder.setMessage("留言不可為空白")
-//            AlertReason.NOT_LOGIN -> builder.setMessage("請先登入才能發佈留言")
-//            AlertReason.EMPTY_IMAGE -> builder.setMessage("請選擇一張照片")
-//        }
-//
-//        builder.setPositiveButton("Ok！",null)
-//        builder.show()
-//    }
-//    enum class AlertReason {
-//        NOT_LOGIN, EMPTY_COMMENT, EMPTY_IMAGE
-//
-//    }
+
 }
